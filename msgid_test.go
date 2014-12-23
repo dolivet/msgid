@@ -47,12 +47,12 @@ func BenchmarkEncodeB64(b *testing.B) {
 	}
 }
 
-func TestMaxSpawnId(t *testing.T) {
+func TestMaxSpawnerId(t *testing.T) {
 	sId := int32(math.MaxInt32)
 	gen := New(sId)
 	msgId := gen.Next()
 	if msgId.SpawnerId() != sId {
-		t.Error("Max SpawnId failed")
+		t.Error("Max SpawnerId failed")
 	}
 
 }
@@ -113,12 +113,12 @@ func TestMsgIdGenerator(t *testing.T) {
 	t.Log(nextVal.Millis, nextVal.Id, nextVal.SpawnerId(), nextVal.SequenceVal())
 }
 
-func TestSpawnId(t *testing.T) {
+func TestSpawnerId(t *testing.T) {
 	genner := New(spawnerId)
 	msgId := genner.Next()
 
 	if msgId.SpawnerId() != spawnerId {
-		t.Error("SpawnId was not correct")
+		t.Error("SpawnerId was not correct")
 	}
 }
 
