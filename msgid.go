@@ -19,6 +19,8 @@ func read_int64(data []byte) (ret int64) {
 	return
 }
 
+type MsgId2 [16]byte
+
 type MsgId struct {
 	Millis int64
 	Id     int64
@@ -75,17 +77,20 @@ func DecodeB64(input string) (*MsgId, error) {
 
 type counter struct {
 	curVal int64
+	prev   int64
 	sync.Mutex
 }
 
-func (ctr *counter) next() int64 {
+func (ctr *counter) next(millis int64) (int64, int64) {
 	ctr.Lock()
 	defer ctr.Unlock()
-	if ctr.curVal == max {
-		ctr.curVal = 0
+	if millis > ctr.prev {
+		ctr.prev = millis
+		ctr.curVal = 1
+	} else {
+		ctr.curVal++
 	}
-	ctr.curVal++
-	return ctr.curVal
+	return ctr.prev, ctr.curVal
 }
 
 // MsgIdGenerator struct holding the spawnerId and internal counter.
@@ -108,8 +113,8 @@ func New(spawnerId int32) *MsgIdGenerator {
 
 // Get the next MsgId.
 func (gen *MsgIdGenerator) Next() MsgId {
-	id := gen.spawnerId<<32 | gen.ctr.next()
-	return MsgId{time.Now().UnixNano() / 1e6, id}
+	millis, id := gen.ctr.next(time.Now().UnixNano() / 1e6)
+	return MsgId{millis, gen.spawnerId<<32 | id}
 }
 
 // Convenience method to get the next MsgId as a Base64 encoded string.
