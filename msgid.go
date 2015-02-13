@@ -19,8 +19,6 @@ func read_int64(data []byte) (ret int64) {
 	return
 }
 
-type MsgId2 [16]byte
-
 type MsgId struct {
 	Millis int64 `db:"millis"`
 	Id     int64 `db:"seq"`
