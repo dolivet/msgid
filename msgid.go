@@ -22,8 +22,8 @@ func read_int64(data []byte) (ret int64) {
 type MsgId2 [16]byte
 
 type MsgId struct {
-	Millis int64
-	Id     int64
+	Millis int64 `db:"millis"`
+	Id     int64 `db:"seq"`
 }
 
 // Get the SpawnId from the MsgId instance.
